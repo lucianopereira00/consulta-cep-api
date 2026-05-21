@@ -1,7 +1,6 @@
 package br.com.consultaceps;
 
 import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpPrincipal;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +19,13 @@ public class BuscandoCep {
                     .build();
             HttpResponse<String> response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Pesquisa realizada com sucesso!");
+
+            } else if(response.body().contentEquals("\"erro\"")) {
+                throw new Exception("Erro ao pesquisar CEP!");
+            }
 
             return new Gson().fromJson(response.body(),Endereco.class);
 
